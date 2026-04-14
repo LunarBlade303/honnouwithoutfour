@@ -266,7 +266,7 @@
   <div class="moon-icon">🌙</div>
   <div class="cover-title">你是《本能》宇宙里的<br>哪位受害者？</div>
   <div class="cover-sub">
-    18 道题，共 17 种结果，总有一个受害者是你
+    27 道题，共 19 种结果，总有一个受害者是你
   </div>
   <button class="btn-start" onclick="startQuiz()">开始测验 →</button>
 </div>
@@ -409,11 +409,23 @@ const RESULTS = {
     icon: "🍃",
     desc: `你认为你叫膝丸。这件事无需商量，无需解释，无需确认。你就是膝丸，仅此而已。其他人怎么看这件事，和你没有关系。`,
     quote: `「你认为你叫膝丸。」`
+  },
+  nobunaga: {
+    name: "织田信长",
+    icon: "🔥",
+    desc: `你生来就是要被仰望的那种人，不是因为你刻意如此，而是因为你走进任何一个房间，所有的颜色都会流向你。你喜爱宝刀，喜爱盛宴，喜爱用一句话把别人绕进去然后若无其事地走开，其实你没想那么多。你从火里回来，只有半张脸，却站在废墟上唱歌，因为死者的歌永远不会结束。你对下属的驾驭之术是交替地收紧和放松缰绳，你对宠爱的人会表现出明显的偏爱，不声不响地给他一把车钥匙，等他去机场接你的时候，在所有人面前吻他一下。你把离你最近的人当武器，也当唯一的东西。`,
+    quote: `「主人取回属于自己的东西，需要别人的许可吗？」`
+  },
+  hachisuka: {
+    name: "蜂须贺虎彻",
+    icon: "🪭",
+    desc: `你练舞、用折扇、在千本鸟居里被鬼魅迷了方向，但德岛的钟声把你叫回来了——你一直记得自己是谁的刀。你对弟弟好得近乎溺爱，对哥哥的态度嘴硬心软，对喜欢自己的人其实心里清楚，但你不一定会说出来。你有时候眼神放空，好像在看别的什么，被人拉着逛完整条千本鸟居，最后说：我不害怕，只是有点困扰。你手里的折扇翻飞起来，在灯下的剪影，比你本人更让人心动。`,
+    quote: `「她脸上的神情，是平日里绝对看不到的。」`
   }
 };
 
 // ═══════════════════════════════════════════
-//  题目数据（18道）
+//  题目数据（26道）
 // ═══════════════════════════════════════════
 const QUESTIONS = [
   {
@@ -483,7 +495,7 @@ const QUESTIONS = [
       { text: "对她很感兴趣，因为她有点神秘，而我喜欢神秘的人。", scores: { smileyAoe: 3 } },
       { text: "礼貌配合，但心里想的是家里的妹妹睡得好不好。", scores: { daikuri: 3, nikkari: 1 } },
       { text: "聊了起来，结果说到天亮，已经是好朋友了。", scores: { kiyomitsu: 2, hizamaru: 1 } },
-      { text: "翻了个身假装睡着了。", scores: { nansen: 3, mikazuki: 1 } }
+      { text: "翻了个身假装睡着了。", scores: { nansen: 2, hachisuka: 2 } }
     ]
   },
   {
@@ -594,6 +606,98 @@ const QUESTIONS = [
       { text: "拖着买菜小车，三根葱长出车斗的人。", scores: { daikuri: 3 } },
       { text: "从不解释自己的来去，月亮永远挂在那里。", scores: { mikazuki: 3 } },
       { text: "认为你叫膝丸的人。", scores: { hizamaruChar: 5 } }
+    ]
+  }
+,
+  {
+    scene: "居酒屋场景 · 《整点报时》",
+    q: "有人不声不响地从你手里拿走了你的饮料抿了一口，又放回来，什么都没说。你会……",
+    opts: [
+      { text: "当没这回事，继续聊天——但心里把这件事记一辈子。", scores: { hasebe: 3, shokudaikiri: 1 } },
+      { text: "笑着问：你喜欢喝吗？想要的话都给你。", scores: { smileyAoe: 3, kiyomitsu: 1 } },
+      { text: "立刻夺回来，这种举止实在是太轻佻了。", scores: { hasebe: 2, nikkari: 2 } },
+      { text: "没注意到，我在想别的事情。", scores: { nansen: 2 } }
+    ]
+  },
+  {
+    scene: "购物场景 · 《お好みで》",
+    q: "你被临时托付了一项采购任务，对方没有亲自来，只是远程指挥你一条一条地去取东西。你会……",
+    opts: [
+      { text: "照着指示做，虽然嘴上嫌弃，但一件也没漏掉，还多想了一步。", scores: { hasebe: 3, ishikirimaru: 2 } },
+      { text: "列好清单，高效完成，这种事不需要来回折腾。", scores: { nikkari: 3, tsurumaru: 1 } },
+      { text: "随便买差不多的就行，反正你买了就得收。", scores: { hizamaru: 2, kikuichi: 1 } },
+      { text: "不去，凭什么我要跑腿？", scores: { nansen: 3 } }
+    ]
+  },
+  {
+    scene: "审美观",
+    q: "你觉得一个人真正有魅力，体现在什么时候？",
+    opts: [
+      { text: "当她跳舞的时候，那种沉浸其中的神情，是平日里绝对看不到的。", scores: { smileyAoe: 3, himetsuru: 1 } },
+      { text: "当她站在门口等你，像一把扎进地里的剑，风也不叫她动一下。", scores: { hasebe: 3, shokudaikiri: 2 } },
+      { text: "当她给你盖好被子，然后安静地躺在旁边不说话。", scores: { shokudaikiri: 3, tsurumaru: 2 } },
+      { text: "当她说「随便你」的时候，那种漫不经心才是真正的迷人。", scores: { nansen: 3, gokotai: 1 } }
+    ]
+  },
+  {
+    scene: "千本鸟居 · 《金色梦乡》",
+    q: "你和朋友走进一条夜晚的长廊，突然听见远处有孩子的笑声，四周却没有人。你会……",
+    opts: [
+      { text: "没什么，继续走，不感兴趣。", scores: { nansen: 3 } },
+      { text: "立刻往外走，想搞清楚声音从哪里来。", scores: { smileyAoe: 3, hizamaru: 1 } },
+      { text: "拉住旁边的人，小声说：我们快走。", scores: { ichigoHitofuri: 2, himetsuru: 1, hachisuka: 2 } },
+      { text: "站在原地没动，也不知道是不怕还是吓愣了。", scores: { hasebe: 2, ishikirimaru: 1 } }
+    ]
+  },
+  {
+    scene: "感情观 · 《候鸟》",
+    q: "你喜欢一个人，但对方和别人走得很近，偏偏你们还是很要好的朋友。你会……",
+    opts: [
+      { text: "装作毫不在意，高高兴兴地聊天，但心里确实一直记得这件事。", scores: { smileyAoe: 3, ichigoHitofuri: 1 } },
+      { text: "直接说清楚，哪怕结果不好也比什么都憋在心里强。", scores: { tsurumaru: 2, himetsuru: 2 } },
+      { text: "我爱着爱着别人的你，这也是一种情感上的圆满。", scores: { smileyAoe: 2, nansen: 1 } },
+      { text: "把那个别人也变成朋友，这样大家都在一起了。", scores: { ichigoHitofuri: 3, hizamaru: 1 } }
+    ]
+  },
+  {
+    scene: "重逢场景 · 《毕业旅行》",
+    q: "分别很久的人回来了，重逢的时候你第一句话是……",
+    opts: [
+      { text: "「你回来了？」就这一句，好像对方只是去便利店买了趟东西。", scores: { himetsuru: 3, daikuri: 1 } },
+      { text: "热烈地拥抱，说了很多对方都没来得及记住的话。", scores: { hizamaru: 3, kiyomitsu: 1 } },
+      { text: "没有特别的话，只是看了一眼，点了点头。", scores: { nansen: 3 } },
+      { text: "「你终于回来了，快来，饭已经做好了。」", scores: { shokudaikiri: 3, yamato: 2 } }
+    ]
+  },
+  {
+    scene: "刀展场景 · 《花骷髅》",
+    q: "有人闯进了一个戒备森严的地方，取走了本来就属于她的东西。你对这件事的看法是……",
+    opts: [
+      { text: "主人取回自己的东西，需要别人的许可吗？理所当然。", scores: { nobunaga: 5, hizamaruChar: 2 } },
+      { text: "行事太嚣张，但确实是她的东西，说不出什么来。", scores: { hasebe: 3, nikkari: 1 } },
+      { text: "自己的东西也要走正当流程，规矩还是要守。", scores: { ishikirimaru: 2, nikkari: 2 } },
+      { text: "最好别把我也卷进去。", scores: { hizamaru: 2, yamato: 1 } }
+    ]
+  },
+  {
+    scene: "暗夜场景 · 《花骷髅》",
+    q: "漫长的黑暗里，你突然意识到对方的处境比你想象的要糟得多。你会……",
+    opts: [
+      { text: "什么都不说，只是用手碰了碰她的肩膀。", scores: { shokudaikiri: 3, hasebe: 2 } },
+      { text: "问她：为什么不早点告诉我？声音有点哑。", scores: { hasebe: 3, ichigoHitofuri: 1 } },
+      { text: "掉眼泪，忍也忍不住，不管她会怎么看我。", scores: { tsurumaru: 2, kiyomitsu: 2 } },
+      { text: "继续装作若无其事，等她自己开口。", scores: { nansen: 2 } }
+    ]
+  }
+,
+  {
+    scene: "折扇场景 · 《金色梦乡》",
+    q: "你一个人练了很久的东西，有人隔着门悄悄看了你一眼，但没有进来。后来你知道了这件事，你会……",
+    opts: [
+      { text: "装作不知道，但心里记得，下次故意再表演得好看一点。", scores: { hachisuka: 3, smileyAoe: 1 } },
+      { text: "下次见到她，直接说：你可以进来看的。", scores: { hachisuka: 3, himetsuru: 1 } },
+      { text: "觉得有点被偷窥的不适，但也不会特别放在心上。", scores: { daikuri: 2, nansen: 1 } },
+      { text: "心里有点高兴，但绝对不会承认。", scores: { hachisuka: 2, tsurumaru: 1 } }
     ]
   }
 ];
