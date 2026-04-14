@@ -523,7 +523,7 @@ const QUESTIONS = [
     opts: [
       { text: "主动去和那个人搞好关系，先融入圈子，再慢慢推进。", scores: { ichigoHitofuri: 3 } },
       { text: "憋一肚子气，然后找机会当面问个清楚。", scores: { tsurumaru: 3 } },
-      { text: "辗转搞到竞争对手的联系方式，打电话挑拨离间。", scores: { kikuichi: 3 } },
+      { text: "辗转搞到竞争对手的联系方式，打电话挑拨离间。", scores: { kikuichi: 3, nobunaga: 1 } },
       { text: "来不来是他/她的事，我不强求。", scores: { mikazuki: 3, nansen: 1 } }
     ]
   },
@@ -532,7 +532,7 @@ const QUESTIONS = [
     opts: [
       { text: "忠诚，一生一世一双人，就像大雁一样。", scores: { himetsuru: 3, hasebe: 2, gokotai: 1 } },
       { text: "自由，谁都不要束缚谁，月亮不属于任何人。", scores: { mikazuki: 3, nansen: 1 } },
-      { text: "她要足够爱我，最好还有点凌虐我的意思。", scores: { kikuichi: 3 } },
+      { text: "她要足够爱我，最好还有点凌虐我的意思。", scores: { kikuichi: 3, nobunaga: 1 } },
       { text: "两个人简单地在一起，做饭、买菜、就够了。", scores: { shokudaikiri: 3, daikuri: 2, yamato: 1 } }
     ]
   },
@@ -596,7 +596,7 @@ const QUESTIONS = [
     opts: [
       { text: "当没这回事，继续聊天——但心里把这件事记一辈子。", scores: { hasebe: 3, shokudaikiri: 1 } },
       { text: "笑着问：你喜欢喝吗？想要的话都给你。", scores: { smileyAoe: 3, kiyomitsu: 1 } },
-      { text: "立刻夺回来，这种举止实在是太轻佻了。", scores: { hasebe: 2, nikkari: 2 } },
+      { text: "立刻夺回来，这种举止实在是太轻佻了。", scores: { hasebe: 2, nikkari: 2, nobunaga: 1 } },
       { text: "没注意到，我在想别的事情。", scores: { nansen: 2 } }
     ]
   },
@@ -606,7 +606,7 @@ const QUESTIONS = [
       { text: "照着指示做，虽然嘴上嫌弃，但一件也没漏掉，还多想了一步。", scores: { hasebe: 3, ishikirimaru: 2 } },
       { text: "列好清单，高效完成，这种事不需要来回折腾。", scores: { nikkari: 3, tsurumaru: 1 } },
       { text: "随便买差不多的就行，反正你买了就得收。", scores: { hizamaru: 2, kikuichi: 1 } },
-      { text: "不去，凭什么我要跑腿？", scores: { nansen: 3 } }
+      { text: "不去，凭什么我要跑腿？", scores: { nansen: 3, nobunaga: 1 } }
     ]
   },
   {
@@ -782,8 +782,12 @@ function showResult() {
   });
 
   // 按得分比例选出最高者，同分时随机打破平局
+  // 隐藏结果：nobunaga 需要达到 7 分才能出现，否则从候选中排除
+  const HIDDEN_THRESHOLDS = { nobunaga: 7 };
+
   let winner = null, topRatio = -1;
   Object.entries(scores).forEach(([role, score]) => {
+    if (HIDDEN_THRESHOLDS[role] !== undefined && score < HIDDEN_THRESHOLDS[role]) return;
     const ratio = maxPossible[role] > 0 ? score / maxPossible[role] : 0;
     const jittered = ratio + Math.random() * 0.0001;
     if (jittered > topRatio) { topRatio = jittered; winner = role; }
