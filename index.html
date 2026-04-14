@@ -672,11 +672,11 @@ function prevQuestion() {
   const prevOptIdx = userAnswers.pop();
   const sc = QUESTIONS[currentQ].opts[prevOptIdx].scores;
   Object.entries(sc).forEach(([k, v]) => { scores[k] = (scores[k] || 0) - v; });
-  selectedOption = prevOptIdx;
   renderQuestion();
-  // 恢复上一题的选中状态
+  // 恢复上一题的选中状态（必须在 renderQuestion 之后，因为按钮是动态创建的）
   const btns = document.querySelectorAll('.option-btn');
   if (btns[prevOptIdx]) btns[prevOptIdx].classList.add('selected');
+  selectedOption = prevOptIdx;
   document.getElementById('btn-next').classList.add('active');
 }
 
