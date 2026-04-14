@@ -1,0 +1,773 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>【本能·宇宙】你是哪位受害者？</title>
+  <style>
+    :root {
+      --bg: #0d0d14;
+      --card: #16162a;
+      --border: #2e2e50;
+      --accent: #a78bfa;
+      --accent2: #818cf8;
+      --text: #ffffff;
+      --text-muted: #94a3b8;
+      --option-hover: #1e1e38;
+      --option-selected: #2d2b55;
+      --option-selected-border: #a78bfa;
+      --progress-bg: #1e1e38;
+      --progress-fill: linear-gradient(90deg, #818cf8, #a78bfa);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 80px;
+      color-scheme: dark;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 40%, rgba(99,102,241,.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 60%, rgba(167,139,250,.08) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 700px; }
+
+    /* ── 封面 ── */
+    #screen-cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      gap: 24px;
+    }
+
+    .moon-icon {
+      font-size: 82px;
+      line-height: 1;
+      filter: drop-shadow(0 0 28px rgba(167,139,250,.6));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    .cover-tag { font-size: 12px; letter-spacing: 3px; color: var(--accent); }
+
+    .cover-title {
+      font-size: clamp(26px, 6vw, 46px);
+      font-weight: 700;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #e0e7ff 0%, #a78bfa 50%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cover-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 440px;
+    }
+
+
+    .btn-start {
+      margin-top: 4px;
+      padding: 14px 50px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #a78bfa);
+      color: #fff;
+      font-size: 16px;
+      font-family: inherit;
+      cursor: pointer;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 28px rgba(99,102,241,.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-start:hover { transform: translateY(-3px); box-shadow: 0 8px 36px rgba(99,102,241,.55); }
+
+    /* ── 测验 ── */
+    #screen-quiz { display: none; padding-top: 48px; }
+
+    .progress-bar-wrap {
+      width: 100%; height: 4px;
+      background: var(--progress-bg);
+      border-radius: 99px; margin-bottom: 36px;
+    }
+    .progress-bar-fill {
+      height: 100%; border-radius: 99px;
+      background: var(--progress-fill);
+      transition: width .45s cubic-bezier(.4,0,.2,1);
+    }
+
+    .q-counter { font-size: 12px; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; }
+
+    .q-scene {
+      font-size: 12px;
+      color: #6366f1;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .q-scene::before { content: '✦'; }
+
+    .q-text {
+      font-size: clamp(16px, 3.5vw, 21px);
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 32px;
+      font-weight: 600;
+    }
+
+    .options-list { display: flex; flex-direction: column; gap: 13px; }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 17px 22px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      line-height: 1.65;
+      cursor: pointer;
+      transition: background .18s, border-color .18s, transform .12s;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .option-btn:hover { background: var(--option-hover); border-color: var(--accent2); transform: translateX(4px); }
+    .option-btn.selected { background: var(--option-selected); border-color: var(--option-selected-border); color: #e0e7ff; }
+
+    .option-label {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #1e1e38;
+      text-align: center;
+      line-height: 26px;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .option-btn.selected .option-label { background: var(--accent); color: #fff; }
+
+    .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
+
+    .btn-prev {
+      padding: 12px 24px;
+      border-radius: 50px; border: 1.5px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      font-size: 14px; font-family: inherit; cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-prev:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-prev:disabled { opacity: .25; pointer-events: none; }
+
+    .btn-next {
+      padding: 12px 36px;
+      border-radius: 50px; border: none;
+      background: linear-gradient(135deg, #6366f1, #a78bfa);
+      color: #fff; font-size: 15px; font-family: inherit;
+      cursor: pointer; letter-spacing: 1px;
+      opacity: .4; pointer-events: none;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-next.active { opacity: 1; pointer-events: all; }
+    .btn-next.active:hover { transform: translateY(-2px); }
+
+    /* ── 结果 ── */
+    #screen-result {
+      display: none;
+      padding-top: 56px;
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .result-icon { font-size: 76px; animation: float 5s ease-in-out infinite; }
+    .result-tag { font-size: 12px; letter-spacing: 3px; color: var(--accent); }
+
+    .result-name {
+      font-size: clamp(28px, 7vw, 50px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #e0e7ff 0%, #a78bfa 50%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+
+    .result-card {
+      width: 100%;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 28px 24px;
+      text-align: left;
+    }
+    .result-card-label { font-size: 11px; letter-spacing: 3px; color: var(--accent); margin-bottom: 14px; text-transform: uppercase; }
+    .result-desc { font-size: 15px; line-height: 1.9; color: var(--text); }
+    .breakdown-list { display: flex; flex-direction: column; gap: 12px; }
+    .breakdown-item { display: flex; flex-direction: column; gap: 4px; }
+    .breakdown-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--text); }
+    .breakdown-name { font-weight: 600; }
+    .breakdown-pct { color: var(--accent); }
+    .breakdown-bar-bg { height: 6px; border-radius: 99px; background: var(--progress-bg); overflow: hidden; }
+    .breakdown-bar-fill { height: 100%; border-radius: 99px; background: var(--progress-fill); transition: width .6s ease; }
+    .breakdown-hint { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .btn-retry {
+      padding: 13px 40px; border-radius: 50px;
+      border: 1.5px solid var(--accent); background: transparent;
+      color: var(--accent); font-size: 15px; font-family: inherit;
+      cursor: pointer; letter-spacing: 1px;
+      transition: background .18s, color .18s;
+    }
+    .btn-retry:hover { background: var(--accent); color: #fff; }
+
+    .fade-in { animation: fadeIn .5s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─────────── 封面 ─────────── -->
+<div class="wrap" id="screen-cover">
+  <div class="moon-icon">🌙</div>
+  <div class="cover-title">你是《本能》宇宙里的<br>哪位受害者？</div>
+  <div class="cover-sub">
+    18 道题，共 17 种结果，总有一个受害者是你
+  </div>
+  <button class="btn-start" onclick="startQuiz()">开始测验 →</button>
+</div>
+
+<!-- ─────────── 测验 ─────────── -->
+<div class="wrap" id="screen-quiz">
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <div class="q-counter" id="q-counter">问题 1 / 18</div>
+  <div class="q-scene" id="q-scene"></div>
+  <div class="q-text" id="q-text"></div>
+  <div class="options-list" id="options-list"></div>
+  <div class="nav-row">
+    <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">← 上一题</button>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">下一题 →</button>
+  </div>
+</div>
+
+<!-- ─────────── 结果 ─────────── -->
+<div class="wrap" id="screen-result">
+  <div class="result-icon" id="result-icon"></div>
+  <div class="result-tag">你的确诊结果</div>
+  <div class="result-name" id="result-name"></div>
+  <div class="result-card">
+    <div class="result-card-label">✦ 性格图鉴</div>
+    <div class="result-desc" id="result-desc"></div>
+    <div class="result-quote" id="result-quote"></div>
+  </div>
+  <div class="result-card" id="result-breakdown">
+    <div class="result-card-label">✦ 答题轨迹</div>
+    <div class="breakdown-list" id="breakdown-list"></div>
+  </div>
+  <button class="btn-retry" onclick="retryQuiz()">再测一次 ↺</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  结果数据（17个）
+// ═══════════════════════════════════════════
+const RESULTS = {
+  kiyomitsu: {
+    name: "加州清光",
+    icon: "💃",
+    desc: `你喜欢年上的美人，说话温柔可亲，不会抛下你。你是那种会为了一个人的一句话心动好久的人——哪怕对方只是随口说了一句"下次带你兜风"，你也会把它记一辈子。你爱得直接，爱得热烈，爱得毫不掩饰。你一天换三套衣服，在豪宅里像求偶的珍珠鸟走来走去，涂出口红边缘，被人用拇指擦干净，又觉得是天大的浪漫。`,
+    quote: `「她的脸从门后露出来，就像遮蔽月亮的云彩被风吹散，只能让人呆呆地仰头盯着她的脸看。」`
+  },
+  kikuichi: {
+    name: "菊一文字则宗",
+    icon: "🌼",
+    desc: `你喜欢顶级美貌的女人，最好对你百依百顺，可实际上你对一脚踹了你的女人才会念念不忘。你开着金属红色跑车，在路上被人剐蹭了，发现对方是个天大的美人，立刻挂断电话处理"艳遇"。你爱吃甜食，情人节会点最花哨的心形巧克力蛋糕，然后五分钟吃干净。有人喜欢你是因为你危险，有人离开你是因为同样的理由，而你只是哈哈大笑。`,
+    quote: `「某一个夜晚他非常轻佻地拍拍三日月的脸：'我要去东京，这里太小了。'只有东京湾才能自由地扔水泥桩。」`
+  },
+  tsurumaru: {
+    name: "鹤丸国永",
+    icon: "🕊️",
+    desc: `你喜欢漂亮的女人，愿意花心思和她相处，也想要得到她的偏爱和忠诚。如果不是这样的话你就自刎归天——当然不是真的，只是你的心情会是这样。你爱惊喜，爱在海岛求婚，爱给婚戒挑最合衬的款式。你长得像球关节娃娃，白头发白睫毛金眼睛。你足够清醒，知道爱是否对等，但结婚纪念日和生日，千年万年，地球毁灭了也会准时出现。`,
+    quote: `「结婚纪念日是六月七号，每年的这天他们都一起吃饭，风雨无阻，六级地震也不能阻拦他们。」`
+  },
+  ichigoHitofuri: {
+    name: "一期一振",
+    icon: "🌊",
+    desc: `你喜欢绝色的美女，如果她愿意的话，你也愿意为了让她高兴去和她老公搞好关系——毕竟和谐的环境才有利于追求。你不是不知道形势，只是你觉得只要足够真诚，最终会有结果。你甚至会亲自下厨，虽然味道……只能说尽力了。发现大家都支持阪神老虎队之后，你会无比高兴地省掉一场东西之争，然后约对方打网球。`,
+    quote: `「他们开始谈论天气，谈论棒球，发现大家都支持阪神老虎队，省去了一场东西之争。」`
+  },
+  hizamaru: {
+    name: "髭切/三郎国宗",
+    icon: "🎭",
+    desc: `你喜欢凑热闹，尤其爱当搅屎棍，给人出谋划策——当然结果好不好另说。别人家的饭肯定比自己家里的好吃，别人家的热闹肯定比自己的精彩。你翻墙进来只是因为"正门没有开"，然后一个人吃了五个马卡龙，腮帮子塞得满满的，还心想"腿丸你不来真是错过了一场好戏"。`,
+    quote: `「全场其实也没有人注意到他，但安定不会漏过任何一个异常。」`
+  },
+  yamato: {
+    name: "大和守安定",
+    icon: "🌱",
+    desc: `你爱种地。城里来了，第一件事是把别人家的玫瑰花圃改造成萝卜地。你不需要太多，有土、有种子、有水就够了。你踏实、温柔、不慕名利，是那种会在乱世里安安静静地把丝瓜藤和毛豆记挂在心里的人。城里的荒唐事发生了很多，但你只是弯着腰在土地里耕作，偶尔抬头说一句：土地可以种任何东西。`,
+    quote: `「土地可以种任何东西。能种花，自然能种萝卜。」`
+  },
+  nikkari: {
+    name: "日光一文字",
+    icon: "🏠",
+    desc: `你觉得娶老婆一定要娶漂亮又贤惠的，最好结婚之后在家当全职太太。你是这个家里最有责任心的人，出了任何乱子都是你去收拾，穿着夜礼服站出来说：真是一场大乱子，以后吃饭最好安排在外面。家里的男人脑子有点问题，你的症状是最轻的一位。只要别改遗嘱，其他事情你都当没看见。`,
+    quote: `「日光一文字到了，他是这个家最有责任心的一个人，因此还没有脱掉夜礼服。」`
+  },
+  himetsuru: {
+    name: "姬鹤一文字",
+    icon: "🦢",
+    desc: `你认为大雁是忠贞之鸟，向往一生一世一双人的爱情，并且有一位青梅竹马。你开着灰色的兰博基尼回家，带着小男朋友，对两位兄长的算盘毫不知情，对萝卜地倒是颇感兴趣。你的爱情简单、明确、忠诚，就像大雁南飞，总会找到那个方向。而且这几天你失联在乡下，说是要亲手种完两亩地才能拿到手机。`,
+    quote: `「姬鹤回来，就得吃饭。她对萝卜地很感兴趣，她带来的小男朋友更是对如何种地滔滔不绝。」`
+  },
+  nansen: {
+    name: "南泉一文字",
+    icon: "🐱",
+    desc: `你是猫。不需要理由，不需要解释。你巡视领地，偶尔允许别人摸头，不允许的时候就走开。你有自己的逻辑，只是别人不一定看得懂。在读寄宿学校，家里发生了什么波澜壮阔的爱情故事暂且不知道，但你也不会太在意——你是猫，这些都不是你的事。`,
+    quote: `「清光猫一样没声音地在地毯上走路，仰起头来看这片落地窗外星星点点的夜。」`
+  },
+  hasebe: {
+    name: "压切长谷部",
+    icon: "🎑",
+    desc: `你的理想型是百依百顺的大和抚子。读书的时候看到蝴蝶夫人自尽哭得比谁都大声，心中对金阁寺有别样的感情，觉得应该把本能寺门口的消防局搬到金阁寺门口。你对传统美学有着深入骨髓的执念，认为客厅里摆六曲群鹤金箔屏风才是正确答案。你也知道现在是现代了，但你还是不太接受和服配蕾丝手套这件事。`,
+    quote: `「从前住过的宅邸，客厅里有一套六曲的群鹤金箔屏风，我很喜欢。」`
+  },
+  mikazuki: {
+    name: "三日月宗近",
+    icon: "🌙",
+    desc: `你生来是一个人，死也会是一个人，因为天无二月，所以日夜循环，生死流转，在海的尽头只有你一个人的影子落在水中。你有轻微脸盲，在太阳很大的路上认不清楚撞了你的车的人长什么样。你温和，但不温顺；你出现，但终究离去。你觉得可以和别人做朋友，但不喜欢就是不喜欢，对此毫无愧意。月亮不属于任何人，月亮属于天空。`,
+    quote: `「月亮永远挂在那里。她朝清光微微一笑，手里玩着清光从花园里薅来的花朵。」`
+  },
+  ishikirimaru: {
+    name: "石切丸",
+    icon: "☁️",
+    desc: `你是替全家人负重前行的那个人。朋友的车险你来管，保险公司电话你来打，礼金你来备，对方的联系方式你来转达——你把所有这些称为"天上掉来的"，但你自己心里清楚，哪有什么天上掉来的。你处事沉稳，偶有一点自我解嘲的幽默，在朋友大发奇想说"保险是自动买好的吧"的时候，只是淡淡地回一句：那是因为我在替全家人负重前行。`,
+    quote: `「啊感谢您的邀请，但非常抱歉……我不是那天与您发生车祸的人的丈夫。」`
+  },
+  daikuri: {
+    name: "大俱利伽罗",
+    icon: "🐯",
+    desc: `你穿绀色校服，家里有一个小妹妹，你们长得很像。你有一辆买菜战车，下午放学顺路去超市，三根葱像剑一样长出车斗。有陌生人搭讪要送你回家，你当场骂了他，然后拖着车哐哐哐地走掉。你后来还是收留了那个会做饭的人，因为他做的煎蛋是流心的，出锅前撒了盐。你是艾露猫，而你的猎人永远在旁边。`,
+    quote: `「买菜战车的车轮和车斗被起伏的路面硌得哐哐响，但战车不会如此轻易地散架。」`
+  },
+  shokudaikiri: {
+    name: "烛台切光忠",
+    icon: "🕯️",
+    desc: `你很英俊，却坏了一只眼睛，你很高大，却自愿弯下腰来看着小小的女孩子。你倒在别人家门口被捡回来，第二天早上五点就起来做早饭，吐司烤好了，煎蛋是流心的，桌上摆好了餐具，连那个毛绒小玩具也有专属的盘子。你没有忘记过去，但现在为她做饭也是心甘情愿，只要和这个女孩子在一起，你就永远幸福。`,
+    quote: `「怪○猎人和艾○猫，一起跋涉在冰原上。」`
+  },
+  smileyAoe: {
+    name: "笑面青江",
+    icon: "✨",
+    desc: `你喜欢神秘的人。你在合宿的夜晚躺在榻榻米上和同学八卦，肩并肩，枕头边放着二手店买来的饮料。你觉得小蜂漂亮得很坦荡，表情也坦荡，心里有什么都光明正大地写在脸上——但也没有不喜欢小蜂的意思，全班女同学里你最喜欢小蜂了！只是你对俱利更感兴趣，因为她太神秘了。你觉得自己很会看人，而且你可能真的是对的。`,
+    quote: `「她喜欢神秘的人，小蜂就不够神秘！——但也没有不喜欢小蜂的意思。」`
+  },
+  gokotai: {
+    name: "后家兼光",
+    icon: "🌾",
+    desc: `你认为土地和粮食比什么都重要，因此积极参与了大和守安定的种地局，虽然没发现她其实觉得你有点烦。你和你的女朋友每天都要种两亩地，不然就不玩手机。姬鹤失联在乡下亲手种地，据说也有你的参与。你的爱情，就像土地一样，踏实，有收成，而且一定会结果。`,
+    quote: `「你认为土地和粮食比什么都重要，因此积极地参与了大和守安定的种地局。」`
+  },
+  hizamaruChar: {
+    name: "膝丸",
+    icon: "🍃",
+    desc: `你认为你叫膝丸。这件事无需商量，无需解释，无需确认。你就是膝丸，仅此而已。其他人怎么看这件事，和你没有关系。`,
+    quote: `「你认为你叫膝丸。」`
+  }
+};
+
+// ═══════════════════════════════════════════
+//  题目数据（18道）
+// ═══════════════════════════════════════════
+const QUESTIONS = [
+  {
+    scene: "出行场景",
+    q: "路上有车剐蹭了你，你下车一看，对方是个让你看呆了的绝色美人。你会……",
+    opts: [
+      { text: "立刻挂掉所有电话，这种事比什么都重要，要抓住机会！", scores: { kikuichi: 3 } },
+      { text: "先道歉，再镇定地查看损坏情况，按正常流程处理。", scores: { mikazuki: 2, ishikirimaru: 2 } },
+      { text: "有点慌，但还是先报保险吧，其他的以后再说。", scores: { ishikirimaru: 3, nikkari: 1 } },
+      { text: "认不清楚对方的脸，因为太阳太大了。", scores: { mikazuki: 3, nansen: 1 } }
+    ]
+  },
+  {
+    scene: "居家场景 · 《本能》",
+    q: "你搬进了一间新房，发现前住客留下了满柜名牌羊毛大衣，还有一只防虫用的小木雕。你会……",
+    opts: [
+      { text: "每件都摸过，闻香袋上的味道，试着穿穿看，发现很合身！", scores: { kiyomitsu: 3 } },
+      { text: "仔细研究这些东西，试图拼凑出一个关于前租客的故事。", scores: { smileyAoe: 2, ishikirimaru: 1 } },
+      { text: "把东西归置好，等主人来取。这是别人的私物。", scores: { nikkari: 2, daikuri: 1 } },
+      { text: "搬走就搬走，留下来的是遗物，穿死人的衣服不吉利。", scores: { kikuichi: 2, hasebe: 1 } }
+    ]
+  },
+  {
+    scene: "情人节场景 · 《不值一提的故事》",
+    q: "情人节你约了喜欢的人去咖啡馆，菜单上全是各种各样的华丽甜点。你会……",
+    opts: [
+      { text: "点最花哨的那个！心形淋面，双色蛋卷，五分钟吃干净！", scores: { kikuichi: 3, kiyomitsu: 1 } },
+      { text: "不太感兴趣，点一杯红茶，我不是年轻女孩子。", scores: { mikazuki: 3 } },
+      { text: "认真地策划了一个惊喜，这种节日当然要用心！", scores: { tsurumaru: 3 } },
+      { text: "情人节是什么？今天不是要浇水吗？", scores: { yamato: 3, gokotai: 1 } }
+    ]
+  },
+  {
+    scene: "放学场景 · 《猫车》",
+    q: "放学路上，一个陌生人突然开车靠近说要送你回家。你会……",
+    opts: [
+      { text: "当场骂回去，然后拖着买菜小车哐哐哐地走掉。", scores: { daikuri: 3 } },
+      { text: "温和但明确地拒绝，顺便报了警。", scores: { nikkari: 2, ishikirimaru: 1 } },
+      { text: "没理会，继续走，这种人我见得多了。", scores: { mikazuki: 2, nansen: 2 } },
+      { text: "……其实有点想上车？他/她长得挺好看的。", scores: { kiyomitsu: 3, ichigoHitofuri: 1 } }
+    ]
+  },
+  {
+    scene: "居家场景 · 《猫车》",
+    q: "有一天，一个不认识的人倒在了你家门口。第二天早上五点，你闻到煎蛋的香气。你会……",
+    opts: [
+      { text: "下楼一看，是那个人在做早饭，吐司烤好了，煎蛋是流心的……决定暂时让他/她留下。", scores: { daikuri: 3 } },
+      { text: "感动之余，也认真评估了一下安全风险，还是报警了。", scores: { ishikirimaru: 2, nikkari: 1 } },
+      { text: "这人会做饭！这是最重要的！立刻把收留计划升级为永久居住。", scores: { shokudaikiri: 2, hizamaru: 2 } },
+      { text: "不感兴趣，只要不妨碍我种地就好。", scores: { yamato: 2, gokotai: 1 } }
+    ]
+  },
+  {
+    scene: "超市场景 · 《猫车》",
+    q: "你在超市冷柜前挑蔬菜，旁边有人主动开口教你怎么选更嫩的芹菜，说斜切才咬得动。你会……",
+    opts: [
+      { text: "认真听，点头，然后把他/她带回家继续讲。", scores: { daikuri: 3 } },
+      { text: "觉得很有用！掏出手机记笔记。", scores: { yamato: 2, gokotai: 2 } },
+      { text: "礼貌地听完，然后还是买了之前想买的那个。", scores: { mikazuki: 2, nikkari: 1 } },
+      { text: "插嘴说其实我更懂，然后讲了十分钟关于土地和粮食的道理。", scores: { gokotai: 3, yamato: 1 } }
+    ]
+  },
+  {
+    scene: "合宿场景 · 《猫车》",
+    q: "秋季合宿，你和不熟的同学睡在同一个房间。对方开始主动和你八卦。你会……",
+    opts: [
+      { text: "对她很感兴趣，因为她有点神秘，而我喜欢神秘的人。", scores: { smileyAoe: 3 } },
+      { text: "礼貌配合，但心里想的是家里的妹妹睡得好不好。", scores: { daikuri: 3, nikkari: 1 } },
+      { text: "聊了起来，结果说到天亮，已经是好朋友了。", scores: { kiyomitsu: 2, hizamaru: 1 } },
+      { text: "翻了个身假装睡着了。", scores: { nansen: 3, mikazuki: 1 } }
+    ]
+  },
+  {
+    scene: "派对场景 · 《本能》",
+    q: "你参加了一场大型晚宴，主人却还没有出现，所有人都在猜测发生了什么。你会……",
+    opts: [
+      { text: "凑上去，帮着出主意，顺手吃了五个马卡龙，腮帮子塞满。", scores: { hizamaru: 3 } },
+      { text: "穿上最漂亮的衣服，在庭院里转悠，接受所有人的目光。", scores: { kiyomitsu: 3 } },
+      { text: "穿着夜礼服站出来维持秩序，这种事当然得有人管。", scores: { nikkari: 3 } },
+      { text: "在花园里看月亮升起来，其他的不太关心。", scores: { mikazuki: 2, tsurumaru: 1 } }
+    ]
+  },
+  {
+    scene: "婚礼场景 · 《不值一提的故事》",
+    q: "你被邀请参加朋友的婚礼，到了门口才发现完全忘了准备礼金。你会……",
+    opts: [
+      { text: "从手腕上摘下手表，去旁边便利店换了现金，再买了信封，全程淡定。", scores: { kikuichi: 3 } },
+      { text: "打电话给最靠谱的朋友求助，他/她一定有办法。", scores: { kiyomitsu: 2, ichigoHitofuri: 1 } },
+      { text: "这种事当然早就处理好了，这就是我的职责所在。", scores: { ishikirimaru: 3, nikkari: 1 } },
+      { text: "一般都是别人帮我处理这些事的……", scores: { mikazuki: 3 } }
+    ]
+  },
+  {
+    scene: "感情场景",
+    q: "你们离婚了（或者分手了）。你会怎么处理？",
+    opts: [
+      { text: "结婚纪念日照样一起吃饭，风雨无阻，六级地震都不行。", scores: { tsurumaru: 3 } },
+      { text: "继续做朋友，只要没有街头火拼，感情和关系可以分开。", scores: { mikazuki: 3, ishikirimaru: 1 } },
+      { text: "大哭大闹，发现没用，然后自己慢慢消化。", scores: { kiyomitsu: 2, ichigoHitofuri: 1 } },
+      { text: "什么都没发生，继续种地，土地不会离婚。", scores: { yamato: 3, gokotai: 2 } }
+    ]
+  },
+  {
+    scene: "感情场景",
+    q: "你喜欢的人和别人走得很近，你会怎么做？",
+    opts: [
+      { text: "主动去和那个人搞好关系，先融入圈子，再慢慢推进。", scores: { ichigoHitofuri: 3 } },
+      { text: "憋一肚子气，然后找机会当面问个清楚。", scores: { tsurumaru: 3 } },
+      { text: "辗转搞到竞争对手的联系方式，打电话挑拨离间。", scores: { kikuichi: 3 } },
+      { text: "来不来是他/她的事，我不强求。", scores: { mikazuki: 3, nansen: 1 } }
+    ]
+  },
+  {
+    scene: "爱情观",
+    q: "你认为爱情里最重要的是什么？",
+    opts: [
+      { text: "忠诚，一生一世一双人，就像大雁一样。", scores: { himetsuru: 3, hasebe: 2, gokotai: 1 } },
+      { text: "自由，谁都不要束缚谁，月亮不属于任何人。", scores: { mikazuki: 3, nansen: 1 } },
+      { text: "她要足够爱我，最好还有点凌虐我的意思。", scores: { kikuichi: 3 } },
+      { text: "两个人简单地在一起，做饭、买菜、就够了。", scores: { shokudaikiri: 3, daikuri: 2, yamato: 1 } }
+    ]
+  },
+  {
+    scene: "人际场景",
+    q: "别人家发生了很大的纠纷，和你没什么直接关系，你会……",
+    opts: [
+      { text: "凑过去，居中调解，出谋划策，绝对不能少我一个。", scores: { hizamaru: 3, ichigoHitofuri: 1 } },
+      { text: "站在一边，该出手时才出手，平时不必暴露存在感。", scores: { mikazuki: 2, daikuri: 2 } },
+      { text: "悄悄撤走，引火烧身不值当，土地还等着我回去。", scores: { yamato: 2, nansen: 2 } },
+      { text: "穿戴整齐地出来维持局面，不能让场子太难看。", scores: { nikkari: 3, ishikirimaru: 1 } }
+    ]
+  },
+  {
+    scene: "时尚观",
+    q: "你如何看待传统服饰与现代配件的混搭（比如和服配蕾丝手套）？",
+    opts: [
+      { text: "很好看！我就是要不伦不类！新时代就该这样！", scores: { kiyomitsu: 3 } },
+      { text: "商业化气息太重，不够正经，不符合我的审美。", scores: { hasebe: 3, nikkari: 1 } },
+      { text: "只要整体气质够，穿什么都是对的。", scores: { mikazuki: 2, tsurumaru: 1 } },
+      { text: "穿能干活的衣服就行，不会溅泥的那种。", scores: { yamato: 3, daikuri: 1 } }
+    ]
+  },
+  {
+    scene: "人设核心",
+    q: "以下哪句话最像你会说的？",
+    opts: [
+      { text: "我来，我看见，我种地。", scores: { yamato: 3, gokotai: 2 } },
+      { text: "在这里遇到你，让我很高兴。再见。", scores: { mikazuki: 3 } },
+      { text: "保险？那当然是自动买好的啊。", scores: { mikazuki: 2, kiyomitsu: 1 } },
+      { text: "天上掉来的东西，不要白不要。（对此我不评价）", scores: { ishikirimaru: 3, hizamaru: 1 } }
+    ]
+  },
+  {
+    scene: "月光场景 · 《本能》",
+    q: "夜晚，庭院里月亮升起，你看见一个穿白色礼服的人站在露台上，俯视所有人。你会……",
+    opts: [
+      { text: "提着裙摆跑过去，大喊：等等我！", scores: { kiyomitsu: 3 } },
+      { text: "抬头看一眼，拍了张照，然后继续吃甜点。", scores: { kikuichi: 2, hizamaru: 2 } },
+      { text: "站在原地，心里觉得那个人很像月亮——美丽，但不属于任何人。", scores: { tsurumaru: 2, mikazuki: 1 } },
+      { text: "月亮升起来了，萝卜今天浇水了吗？", scores: { yamato: 3, gokotai: 1 } }
+    ]
+  },
+  {
+    scene: "青梅竹马",
+    q: "你有一位青梅竹马，你会……",
+    opts: [
+      { text: "当然要在一起！青梅竹马不在一起是资源浪费！", scores: { himetsuru: 3, gokotai: 2 } },
+      { text: "珍视这段感情，每年她/他的生日，地球毁灭了也要记得。", scores: { tsurumaru: 3 } },
+      { text: "没有青梅竹马，我只认识买菜认识的人。", scores: { daikuri: 2, shokudaikiri: 1 } },
+      { text: "没有青梅竹马，我只有我自己。", scores: { mikazuki: 3, hizamaruChar: 3 } }
+    ]
+  },
+  {
+    scene: "终极一问",
+    q: "最后一题：你觉得你是……",
+    opts: [
+      { text: "那个在月亮升起时仰头发呆，然后冲过去的人。", scores: { kiyomitsu: 3, ichigoHitofuri: 1 } },
+      { text: "拖着买菜小车，三根葱长出车斗的人。", scores: { daikuri: 3 } },
+      { text: "从不解释自己的来去，月亮永远挂在那里。", scores: { mikazuki: 3 } },
+      { text: "认为你叫膝丸的人。", scores: { hizamaruChar: 5 } }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+//  逻辑
+// ═══════════════════════════════════════════
+let currentQ = 0;
+let selectedOption = null;
+let scores = {};
+let userAnswers = [];
+
+function initScores() {
+  scores = {};
+  Object.keys(RESULTS).forEach(k => (scores[k] = 0));
+}
+
+function startQuiz() {
+  initScores();
+  currentQ = 0;
+  selectedOption = null;
+  userAnswers = [];
+  document.getElementById('screen-cover').style.display = 'none';
+  document.getElementById('screen-result').style.display = 'none';
+  const quizEl = document.getElementById('screen-quiz');
+  quizEl.style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  selectedOption = null;
+  const data = QUESTIONS[currentQ];
+  const total = QUESTIONS.length;
+
+  document.getElementById('progress-fill').style.width = (currentQ / total * 100) + '%';
+  document.getElementById('q-counter').textContent = `问题 ${currentQ + 1} / ${total}`;
+  document.getElementById('q-scene').textContent = data.scene || '';
+  document.getElementById('q-text').textContent = data.q;
+
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  data.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn fade-in';
+    btn.style.animationDelay = (i * 0.06) + 's';
+    const label = document.createElement('span');
+    label.className = 'option-label';
+    label.textContent = labels[i];
+    const text = document.createElement('span');
+    text.textContent = opt.text;
+    btn.appendChild(label);
+    btn.appendChild(text);
+    btn.onclick = () => selectOption(i, btn);
+    list.appendChild(btn);
+  });
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.classList.remove('active');
+  nextBtn.textContent = currentQ === QUESTIONS.length - 1 ? '查看结果 ✦' : '下一题 →';
+  const prevBtn = document.getElementById('btn-prev');
+  prevBtn.disabled = currentQ === 0;
+}
+
+function selectOption(idx, btnEl) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btnEl.classList.add('selected');
+  selectedOption = idx;
+  document.getElementById('btn-next').classList.add('active');
+}
+
+function prevQuestion() {
+  if (currentQ <= 0) return;
+  currentQ--;
+  // 撤销上一题的得分
+  const prevOptIdx = userAnswers.pop();
+  const sc = QUESTIONS[currentQ].opts[prevOptIdx].scores;
+  Object.entries(sc).forEach(([k, v]) => { scores[k] = (scores[k] || 0) - v; });
+  selectedOption = prevOptIdx;
+  renderQuestion();
+  // 恢复上一题的选中状态
+  const btns = document.querySelectorAll('.option-btn');
+  if (btns[prevOptIdx]) btns[prevOptIdx].classList.add('selected');
+  document.getElementById('btn-next').classList.add('active');
+}
+
+function nextQuestion() {
+  if (selectedOption === null) return;
+  const sc = QUESTIONS[currentQ].opts[selectedOption].scores;
+  Object.entries(sc).forEach(([k, v]) => { scores[k] = (scores[k] || 0) + v; });
+  userAnswers.push(selectedOption);
+  currentQ++;
+  if (currentQ >= QUESTIONS.length) showResult();
+  else renderQuestion();
+}
+
+function showResult() {
+  // 计算每个角色的理论最高得分
+  const maxPossible = {};
+  Object.keys(RESULTS).forEach(k => maxPossible[k] = 0);
+  QUESTIONS.forEach(q => {
+    const best = {};
+    q.opts.forEach(opt => {
+      Object.entries(opt.scores).forEach(([role, val]) => {
+        if (!best[role] || val > best[role]) best[role] = val;
+      });
+    });
+    Object.entries(best).forEach(([role, val]) => { maxPossible[role] += val; });
+  });
+
+  // 按得分比例选出最高者，同分时随机打破平局
+  let winner = null, topRatio = -1;
+  Object.entries(scores).forEach(([role, score]) => {
+    const ratio = maxPossible[role] > 0 ? score / maxPossible[role] : 0;
+    const jittered = ratio + Math.random() * 0.0001;
+    if (jittered > topRatio) { topRatio = jittered; winner = role; }
+  });
+
+  const r = RESULTS[winner];
+  document.getElementById('screen-quiz').style.display = 'none';
+  const resultEl = document.getElementById('screen-result');
+  resultEl.style.display = 'flex';
+  resultEl.classList.add('fade-in');
+
+  document.getElementById('result-icon').textContent = r.icon;
+  document.getElementById('result-name').textContent = r.name;
+  document.getElementById('result-desc').textContent = r.desc;
+  document.getElementById('result-quote').textContent = r.quote;
+  document.getElementById('progress-fill').style.width = '100%';
+
+  // ── 答题轨迹：取得分比例前3名 ──
+  const ranked = Object.entries(scores)
+    .map(([role, score]) => ({
+      role,
+      score,
+      ratio: maxPossible[role] > 0 ? score / maxPossible[role] : 0
+    }))
+    .sort((a, b) => b.ratio - a.ratio)
+    .slice(0, 3);
+
+  // 收集每道题对 winner 贡献最大的选项文字
+  const keyAnswers = [];
+  userAnswers.forEach((optIdx, qIdx) => {
+    const opt = QUESTIONS[qIdx].opts[optIdx];
+    const contribution = opt.scores[winner] || 0;
+    if (contribution > 0) keyAnswers.push(`Q${qIdx + 1}「${opt.text.slice(0, 18)}${opt.text.length > 18 ? '…' : ''}」`);
+  });
+
+  const listEl = document.getElementById('breakdown-list');
+  listEl.innerHTML = ranked.map((item, i) => {
+    const name = RESULTS[item.role]?.name || item.role;
+    const pct = Math.round(item.ratio * 100);
+    const isWinner = item.role === winner;
+    return `<div class="breakdown-item">
+      <div class="breakdown-meta">
+        <span class="breakdown-name">${i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : '🥉 '}${name}</span>
+        <span class="breakdown-pct">${pct}%</span>
+      </div>
+      <div class="breakdown-bar-bg">
+        <div class="breakdown-bar-fill" style="width:${pct}%"></div>
+      </div>
+      ${isWinner && keyAnswers.length > 0
+        ? `<div class="breakdown-hint">关键答题：${keyAnswers.slice(0, 3).join('　')}</div>`
+        : ''}
+    </div>`;
+  }).join('');
+}
+
+function retryQuiz() {
+  document.getElementById('screen-result').style.display = 'none';
+  document.getElementById('screen-result').classList.remove('fade-in');
+  document.getElementById('screen-cover').style.display = 'flex';
+}
+</script>
+</body>
+</html>
+
